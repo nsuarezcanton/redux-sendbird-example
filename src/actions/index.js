@@ -27,9 +27,33 @@ export function login (username) {
     });
   });
 
-  console.log(`@Action LOGIN username:${username}`);
   return {
     type: LOGIN,
     payload: loginSuccess,
+  };
+}
+
+export const FETCH_CHANNELS = 'FETCH_CHANNELS';
+export function fetchChannels (page) {
+  const loadChannels = new Promise((resolve, reject) => {
+    sendbird.init({
+      page,
+      limit: 20,
+      successFunc: (data) => {
+        resolve({
+          channels: data.channels,
+        });
+      },
+      errorFunc: (status, error) => {
+        reject({
+          error: new Error(error),
+        });
+      },
+    });
+  });
+
+  return {
+    type: LOGIN,
+    payload: loadChannels,
   };
 }
