@@ -1,24 +1,35 @@
 import sendbird from 'sendbird';
 
-export const LOGIN = 'LOGIN';
+// SendBird App ID
+// TODO: Add as .env variable
+const APP_ID = '92810347-7548-4EAD-AC80-6107B5DAE06D';
 
+export const LOGIN = 'LOGIN';
 export function login (username) {
-  sendbird.init({
-    app_id: '92810347-7548-4EAD-AC80-6107B5DAE06D',
-    guest_id: username,
-    user_name: username,
-    image_url: '',
-    access_token: '',
-    successFunc: (data) => {
-      console.log('success');
-    },
-    errorFunc: (status, error) => {
-      this.setState({ username: '' });
-    },
+  const loginSuccess = new Promise((resolve, reject) => {
+    sendbird.init({
+      app_id: APP_ID,
+      guest_id: username,
+      user_name: username,
+      image_url: '',
+      access_token: '',
+      successFunc: () => {
+        resolve({
+          success: true,
+          user_name: username,
+        });
+      },
+      errorFunc: (status, error) => {
+        reject({
+          error: new Error(error),
+        });
+      },
+    });
   });
+
   console.log(`@Action LOGIN username:${username}`);
   return {
     type: LOGIN,
-    payload: username,
+    payload: loginSuccess,
   };
 }

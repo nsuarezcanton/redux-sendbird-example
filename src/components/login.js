@@ -8,6 +8,8 @@ class Login extends Component {
   static propTypes = {
     username: PropTypes.string,
     login: PropTypes.func,
+    success: PropTypes.bool,
+    navigator: PropTypes.object,
   };
 
   static styles = {
@@ -60,17 +62,24 @@ class Login extends Component {
     this.state = { username: '' };
   }
 
+  componentWillUpdate = (nextProps) => {
+    const { success } = nextProps;
+    if (success) {
+      this.props.navigator.push({ name: 'channels' });
+    }
+  };
+
   onPress = () => {
     const { username } = this.state;
     this.props.login(username);
   };
 
-  onChangeText = (text) => {
-    console.log(text);
-    this.setState({ username: text });
+  onChangeText = (formInput) => {
+    this.setState({ username: formInput });
   };
 
   render () {
+    // console.log(this.props);
     return (
       <View style={Login.styles.container}>
         <View style={Login.styles.loginContainer}>
@@ -99,5 +108,13 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ login }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+function mapStateToProps(state = {}) {
+  const loginState = state.login;
+  return {
+    success: loginState.success,
+    error: loginState.error,
+    username: loginState.user_name,
+  };
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
