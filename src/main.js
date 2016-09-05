@@ -5,10 +5,21 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxPromise from 'redux-promise';
 
+import * as firebase from 'firebase';
+
 // Components
 import Login from './components/login';
 
 import reducers from './reducers';
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: '<your-api-key>',
+  authDomain: '<your-auth-domain>',
+  databaseURL: '<your-database-url>',
+  storageBucket: '<your-storage-bucket>',
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
@@ -32,7 +43,7 @@ export default class Main extends Component {
 
   render () {
     return (
-      <Provider store={createStoreWithMiddleware(reducers)}>
+      <Provider firebase={firebaseApp} store={createStoreWithMiddleware(reducers)}>
         <Navigator
           style={Main.styles.container}
           initialRoute={{ name: 'login' }}
