@@ -54,11 +54,34 @@ class Channels extends Component {
   }
   static PULLDOWN_DISTANCE = 40;
 
+  constructor(props) {
+    super(props);
+
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
+    this.state = {
+      channelList: [],
+      dataSource: ds.cloneWithRows([]),
+      page: 0,
+      next: 0,
+      channelName: '',
+    };
+  }
+
+  // getInitialState = () => {
+  //   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  // };
+
+  // componentWillMount = () => {
+  //   this.getChannelList(1);
+  // };
+
   render () {
     return (
       <View style={Channels.styles.container}>
         <View style={Channels.styles.listContainer}>
           <ListView
+            enableEmptySections={true}
             dataSource={this.state.dataSource}
             renderRow={(rowData) =>
               <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>

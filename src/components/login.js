@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, TextInput } from 'react-native';
+import { View, Text, TouchableHighlight, TextInput, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+// import { Spinner } from 'react-native-spinkit';
+
 import { login } from '../actions/index';
 
 class Login extends Component {
@@ -10,6 +12,7 @@ class Login extends Component {
     login: PropTypes.func,
     success: PropTypes.bool,
     navigator: PropTypes.object,
+    submitInProgress: PropTypes.bool,
   };
 
   static styles = {
@@ -17,7 +20,7 @@ class Login extends Component {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'stretch',
-      backgroundColor: '#6E5BAA',
+      backgroundColor: '#CEF7A0',
     },
     loginContainer: {
       flex: 1,
@@ -38,12 +41,10 @@ class Login extends Component {
     button: {
       justifyContent: 'center',
       alignItems: 'center',
-      borderWidth: 1,
       borderRadius: 5,
-      borderColor: '#328FE6',
       padding: 10,
       marginTop: 10,
-      backgroundColor: '#32c5e6',
+      backgroundColor: 'rgba(5, 74, 145, 1)',
     },
     label: {
       width: 230,
@@ -59,7 +60,10 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { username: '' };
+    this.state = {
+      username: '',
+      submitInProgress: false,
+    };
   }
 
   componentWillUpdate = (nextProps) => {
@@ -72,6 +76,7 @@ class Login extends Component {
   onPress = () => {
     const { username } = this.state;
     this.props.login(username);
+    this.setState({ submitInProgress: true });
   };
 
   onChangeText = (formInput) => {
@@ -79,6 +84,7 @@ class Login extends Component {
   };
 
   render () {
+    const { submitInProgress } = this.state;
     return (
       <View style={Login.styles.container}>
         <View style={Login.styles.loginContainer}>
@@ -92,7 +98,7 @@ class Login extends Component {
           />
           <TouchableHighlight
             style={Login.styles.button}
-            underlayColor={'#328FE6'}
+            underlayColor={'#D4F2DB'}
             onPress={this.onPress}
           >
             <Text style={Login.styles.label}>LOGIN</Text>
