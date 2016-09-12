@@ -5,6 +5,12 @@ import { bindActionCreators } from 'redux';
 import { fetchChannels } from '../actions/index';
 
 class Channels extends Component {
+  static propTypes = {
+    success: PropTypes.bool,
+    channelList: PropTypes.array,
+    fetchChannels: PropTypes.func,
+  };
+
   static styles = {
     container: {
       flex: 1,
@@ -68,34 +74,47 @@ class Channels extends Component {
     };
   }
 
-  // getInitialState = () => {
-  //   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-  // };
+  componentWillMount = () => {
+    this.props.fetchChannels();
+  };
 
-  // componentWillMount = () => {
-  //   this.getChannelList(1);
-  // };
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({
+      channelList: this.state.channelList.concat(nextProps.response.channels),
+    }, () => {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.state.channelList),
+        page: nextProps.response.page,
+        next: nextProps.response.next,
+      });
+    });
+  };
+
+  renderRow = (rowData) => {
+    return (
+      <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>
+        <View style={Channels.styles.listItem}>
+          <View style={Channels.styles.listIcon}>
+            <Image style={Channels.styles.channelIcon} source={{ uri: rowData.cover_img_url }} />
+          </View>
+          <View style={Channels.styles.listInfo}>
+            <Text style={Channels.styles.titleLabel}># {rowData.name}</Text>
+            <Text style={Channels.styles.memberLabel}>{rowData.member_count} members</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    );
+  };
 
   render () {
+    console.log(this.state);
     return (
       <View style={Channels.styles.container}>
         <View style={Channels.styles.listContainer}>
           <ListView
-            enableEmptySections={true}
+            enableEmptySections
             dataSource={this.state.dataSource}
-            renderRow={(rowData) =>
-              <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>
-                <View style={Channels.styles.listItem}>
-                  <View style={Channels.styles.listIcon}>
-                    <Image style={Channels.styles.channelIcon} source={{ uri: rowData.cover_img_url }} />
-                  </View>
-                  <View style={Channels.styles.listInfo}>
-                    <Text style={Channels.styles.titleLabel}># {rowData.name}</Text>
-                    <Text style={Channels.styles.memberLabel}>{rowData.member_count} members</Text>
-                  </View>
-                </View>
-              </TouchableHighlight>
-            }
+            renderRow={this.renderRow}
             onEndReached={() => this.getChannelList(this.state.next)}
             onEndReachedThreshold={this.PULLDOWN_DISTANCE}
           />
@@ -109,4 +128,18 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchChannels }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(Channels);
+function mapStateToProps(state, ownProps = {}) {
+  const channelListState = state.channels;
+
+  if (channelListState.response) {
+    console.log(channelListState.response);
+    return {
+      success: channelListState.success,
+      error: channelListState.error,
+      response: channelListState.response,
+    };
+  }
+  return ownProps;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Channels);

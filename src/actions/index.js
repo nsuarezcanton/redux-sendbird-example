@@ -2,7 +2,7 @@ import sendbird from 'sendbird';
 
 // SendBird App ID
 // TODO: Add as .env variable
-const APP_ID = '92810347-7548-4EAD-AC80-6107B5DAE06D';
+const APP_ID = 'A7A2672C-AD11-11E4-8DAA-0A18B21C2D82';
 
 export const LOGIN = 'LOGIN';
 export function login (username) {
@@ -36,12 +36,14 @@ export function login (username) {
 export const FETCH_CHANNELS = 'FETCH_CHANNELS';
 export function fetchChannels (page) {
   const loadChannels = new Promise((resolve, reject) => {
-    sendbird.init({
+    sendbird.getChannelList({
       page,
       limit: 20,
       successFunc: (data) => {
+        console.log(data);
         resolve({
-          channels: data.channels,
+          success: true,
+          response: data,
         });
       },
       errorFunc: (status, error) => {
@@ -53,7 +55,7 @@ export function fetchChannels (page) {
   });
 
   return {
-    type: LOGIN,
+    type: FETCH_CHANNELS,
     payload: loadChannels,
   };
 }
