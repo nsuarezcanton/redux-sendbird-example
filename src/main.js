@@ -11,12 +11,14 @@ import reducers from './reducers';
 // Components
 import Login from './components/login';
 import Channels from './components/channels';
+import Chat from './components/chat';
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
 const ROUTES = {
   login: Login,
   channels: Channels,
+  chat: Chat,
 };
 
 export default class Main extends Component {

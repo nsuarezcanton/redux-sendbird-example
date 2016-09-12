@@ -2,13 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import { View, Text, ListView, TouchableHighlight, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchChannels } from '../actions/index';
+import { fetchChannels, joinChannel } from '../actions/index';
 
 class Channels extends Component {
   static propTypes = {
     success: PropTypes.bool,
     channelList: PropTypes.array,
     fetchChannels: PropTypes.func,
+    joinChannel: PropTypes.func,
+    navigator: PropTypes.object,
   };
 
   static styles = {
@@ -90,6 +92,18 @@ class Channels extends Component {
     });
   };
 
+  componentDidUpdate = (nextProps) => {
+    const { joinChannelSuccessful } = nextProps;
+    if (joinChannelSuccessful) {
+      this.props.navigator.push({ name: 'chat' });
+      // console.log('here');
+    }
+  };
+
+  onChannelPress = (url) => {
+    this.props.joinChannel(url);
+  };
+
   renderRow = (rowData) => {
     return (
       <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>
@@ -107,7 +121,6 @@ class Channels extends Component {
   };
 
   render () {
-    console.log(this.state);
     return (
       <View style={Channels.styles.container}>
         <View style={Channels.styles.listContainer}>
@@ -115,7 +128,7 @@ class Channels extends Component {
             enableEmptySections
             dataSource={this.state.dataSource}
             renderRow={this.renderRow}
-            onEndReached={() => this.getChannelList(this.state.next)}
+            onEndReached={() => this.props.fetchChannels(this.state.next)}
             onEndReachedThreshold={this.PULLDOWN_DISTANCE}
           />
         </View>
@@ -125,21 +138,22 @@ class Channels extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchChannels }, dispatch);
+  return bindActionCreators({ fetchChannels, joinChannel }, dispatch);
 }
 
 function mapStateToProps(state, ownProps = {}) {
-  const channelListState = state.channels;
+  // const channelListState = state.channels;
 
-  if (channelListState.response) {
-    console.log(channelListState.response);
-    return {
-      success: channelListState.success,
-      error: channelListState.error,
-      response: channelListState.response,
-    };
-  }
-  return ownProps;
+  // console.log(channelListState);
+
+  // if (channelListState.response) {
+  //   return {
+  //     success: channelListState.success,
+  //     error: channelListState.error,
+  //     response: channelListState.response,
+  //   };
+  // }
+  return Object.assign({}, ownProps, state.channels);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);

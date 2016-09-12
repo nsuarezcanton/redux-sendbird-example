@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableHighlight, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-// import { Spinner } from 'react-native-spinkit';
 
 import { login } from '../actions/index';
 
@@ -84,7 +83,6 @@ class Login extends Component {
   };
 
   render () {
-    const { submitInProgress } = this.state;
     return (
       <View style={Login.styles.container}>
         <View style={Login.styles.loginContainer}>

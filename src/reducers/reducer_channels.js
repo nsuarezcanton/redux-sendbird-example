@@ -1,11 +1,11 @@
-import { FETCH_CHANNELS } from '../actions/index';
+import { FETCH_CHANNELS, JOIN_CHANNEL } from '../actions/index';
 
 export default function (state = {}, action) {
-  const fetchChannelsResponse = action.payload;
   switch (action.type) {
     case FETCH_CHANNELS:
-      console.log(fetchChannelsResponse);
-      return Object.assign({}, state, fetchChannelsResponse);
+      return Object.assign({}, state, action.payload);
+    case JOIN_CHANNEL:
+      return Object.assign({}, state, action.payload);
     default:
       return state;
   }

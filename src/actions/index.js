@@ -40,7 +40,6 @@ export function fetchChannels (page) {
       page,
       limit: 20,
       successFunc: (data) => {
-        console.log(data);
         resolve({
           success: true,
           response: data,
@@ -57,5 +56,44 @@ export function fetchChannels (page) {
   return {
     type: FETCH_CHANNELS,
     payload: loadChannels,
+  };
+}
+
+
+export const JOIN_CHANNEL = 'JOIN_CHANNEL';
+export function joinChannel (url) {
+  const joinChannelRequest = new Promise((resolve, reject) => {
+    sendbird.joinChannel(
+      url,
+      {
+        successFunc: (data) => {
+          // console.log(data);
+          resolve({
+            joinChannelSuccessful: true,
+            joinChannelResponse: data,
+          });
+          sendbird.connect({
+            successFunc: (test) => {
+              // console.log(test);
+            },
+            errorFunc: (status, error) => {
+              // console.log(status, error);
+            },
+          });
+        },
+        errorFunc: (status, error) => {
+          // console.log(status, error);
+          reject({
+            error: new Error(error),
+          });
+        },
+      }
+    );
+  });
+
+
+  return {
+    type: JOIN_CHANNEL,
+    payload: joinChannelRequest,
   };
 }
