@@ -113,3 +113,36 @@ export function leaveChat () {
     payload: true,
   };
 }
+
+export const GET_MESSAGES = 'GET_MESSAGES';
+export function getMessages () {
+  const getMessagesRequest = new Promise((resolve, reject) => {
+    sendbird.getMessageLoadMore({
+      limit: 100,
+      successFunc: (data) => {
+        const messageList = [];
+        data.messages.reverse().forEach((msg, index) => {
+          if (sendbird.isMessage(msg.cmd)) {
+            messageList.push(msg.payload);
+          }
+        });
+
+        resolve({
+          getMessagesSuccessful: true,
+          getMessagesResponse: messageList,
+        });
+        // this.setState({ messageList: messageList.concat(this.state.messageList) });
+      },
+      errorFunc: (status, error) => {
+        reject({
+          error: new Error(error),
+        });
+      },
+    });
+  });
+
+  return {
+    type: GET_MESSAGES,
+    payload: getMessagesRequest,
+  };
+}

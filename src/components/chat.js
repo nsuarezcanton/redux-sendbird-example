@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight, TextInput, Dimensions } from 'react-nat
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { reciveMessage, leaveChat } from '../actions/index';
+import { getMessages, leaveChat } from '../actions/index';
 
 const windowSize = Dimensions.get('window');
 
@@ -11,6 +11,7 @@ class Chat extends Component {
   static propTypes = {
     navigator: PropTypes.object,
     leaveChat: PropTypes.func,
+    getMessages: PropTypes.func,
   };
 
   static styles = {
@@ -69,12 +70,16 @@ class Chat extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
 
     this.state = {
       message: '',
       messageList: [],
     };
+  }
+
+  componentDidMount = () => {
+    this.props.getMessages();
+    console.log(this.props);
   }
 
   onBackPress = () => {
@@ -121,7 +126,7 @@ class Chat extends Component {
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ leaveChat }, dispatch);
+  return bindActionCreators({ leaveChat, getMessages }, dispatch);
 }
 
 function mapStateToProps(state = {}) {
