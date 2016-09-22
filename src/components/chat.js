@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, TextInput, Dimensions } from 'react-native';
+import { View, Text, TouchableHighlight, TextInput, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getMessages, leaveChat } from '../actions/index';
+import { getMessages, leaveChat, sendMessage } from '../actions/index';
 
 const windowSize = Dimensions.get('window');
 
@@ -12,6 +12,9 @@ class Chat extends Component {
     navigator: PropTypes.object,
     leaveChat: PropTypes.func,
     getMessages: PropTypes.func,
+    messageList: PropTypes.array,
+    sendMessage: PropTypes.func,
+    messageSent: PropTypes.bool,
   };
 
   static styles = {
@@ -73,19 +76,53 @@ class Chat extends Component {
 
     this.state = {
       message: '',
-      messageList: [],
+      messagesOnDisplay: [],
     };
   }
 
-  componentDidMount = () => {
-    this.props.getMessages();
-    console.log(this.props);
-  }
+  componentWillMount = () => {
+    this.props.getMessages(this.state.messagesOnDisplay);
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    const { messageList } = nextProps;
+    this.setState({
+      messagesOnDisplay: messageList,
+    });
+  };
+
+  // shouldComponentUpdate = (nextProps, nextState) => {
+  //   console.log(nextProps);
+  //   console.log(nextState);
+  //   return true;
+  // }
 
   onBackPress = () => {
     this.props.leaveChat();
     this.props.navigator.pop();
-  }
+  };
+
+  renderMessages = () => {
+    const { messageList } = this.props;
+
+    if (messageList) {
+      const messages = messageList.map((item, index) => {
+        return (
+          <View
+            style={Chat.styles.messageContainer}
+            key={index}
+          >
+            <Text style={this.nameLabel}>
+              {item.user.name}
+              <Text style={Chat.styles.messageLabel}> : {item.message}</Text>
+            </Text>
+          </View>
+        );
+      });
+      return messages;
+    }
+    return null;
+  };
 
   render () {
     return (
@@ -100,7 +137,14 @@ class Chat extends Component {
           </TouchableHighlight>
         </View>
         <View style={Chat.styles.chatContainer}>
-          <Text style={{ color: '#000' }}>Chat</Text>
+          <ScrollView
+            ref={(c) => this._scrollView = c}
+            onScroll={this.handleScroll}
+            scrollEventThrottle={16}
+            onContentSizeChange={(e) => {}}
+          >
+        {this.renderMessages()}
+        </ScrollView>
         </View>
         <View style={Chat.styles.inputContainer}>
           <View style={Chat.styles.textContainer}>
@@ -113,7 +157,7 @@ class Chat extends Component {
           <View style={Chat.styles.sendContainer}>
             <TouchableHighlight
               underlayColor={'#4e4273'}
-              onPress={() => this.onSendPress()}
+              onPress={() => this.props.sendMessage(this.state.message)}
             >
               <Text style={Chat.styles.sendLabel}>SEND</Text>
             </TouchableHighlight>
@@ -126,13 +170,15 @@ class Chat extends Component {
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ leaveChat, getMessages }, dispatch);
+  return bindActionCreators({ leaveChat, getMessages, sendMessage }, dispatch);
 }
 
 function mapStateToProps(state = {}) {
   const chatState = state.chat;
+  console.log(chatState);
   return {
-    leaveSuccess: chatState.leaveSuccess,
+    messageList: chatState.messageList,
+    messageSent: chatState.messageSent,
   };
 }
 

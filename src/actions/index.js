@@ -2,7 +2,7 @@ import sendbird from 'sendbird';
 
 // SendBird App ID
 // TODO: Add as .env variable
-const APP_ID = 'A7A2672C-AD11-11E4-8DAA-0A18B21C2D82';
+const APP_ID = '92810347-7548-4EAD-AC80-6107B5DAE06D';
 
 export const LOGIN = 'LOGIN';
 export function login (username) {
@@ -73,10 +73,10 @@ export function joinChannel (url) {
           });
           sendbird.connect({
             successFunc: (test) => {
-              console.log(test);
+              // console.log(test);
             },
             errorFunc: (status, error) => {
-              console.log(status, error);
+              // console.log(status, error);
             },
           });
         },
@@ -97,14 +97,6 @@ export function joinChannel (url) {
   };
 }
 
-export const RECIVE_MESSAGE = 'RECIVE_MESSAGE';
-export function reciveMessage () {
-  sendbird.events.onMessageReceived = (obj) => {
-    // console.log(obj);
-    // this.setState({messageList: this.state.messageList.concat([obj])});
-  };
-}
-
 export const LEAVE_CHAT = 'LEAVE_CHAT';
 export function leaveChat () {
   sendbird.disconnect();
@@ -115,7 +107,7 @@ export function leaveChat () {
 }
 
 export const GET_MESSAGES = 'GET_MESSAGES';
-export function getMessages () {
+export function getMessages (previousMessageList = []) {
   const getMessagesRequest = new Promise((resolve, reject) => {
     sendbird.getMessageLoadMore({
       limit: 100,
@@ -126,12 +118,11 @@ export function getMessages () {
             messageList.push(msg.payload);
           }
         });
-
         resolve({
           getMessagesSuccessful: true,
           getMessagesResponse: messageList,
+          previousMessageList,
         });
-        // this.setState({ messageList: messageList.concat(this.state.messageList) });
       },
       errorFunc: (status, error) => {
         reject({
@@ -144,5 +135,14 @@ export function getMessages () {
   return {
     type: GET_MESSAGES,
     payload: getMessagesRequest,
+  };
+}
+
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export function sendMessage (text) {
+  sendbird.message(text);
+  return {
+    type: SEND_MESSAGE,
+    payload: true,
   };
 }
