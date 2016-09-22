@@ -1,17 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, TextInput } from 'react-native';
+import { View, Text, TouchableHighlight, TextInput, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { login } from '../actions/index';
+import { reciveMessage, leaveChat } from '../actions/index';
 
-class Login extends Component {
+const windowSize = Dimensions.get('window');
+
+class Chat extends Component {
   static propTypes = {
-    // username: PropTypes.string,
-    // login: PropTypes.func,
-    // success: PropTypes.bool,
-    // navigator: PropTypes.object,
-    // submitInProgress: PropTypes.bool,
+    navigator: PropTypes.object,
+    leaveChat: PropTypes.func,
   };
 
   static styles = {
@@ -36,24 +35,85 @@ class Login extends Component {
     },
     inputContainer: {
       flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      backgroundColor: '#6E5BAA',
+    },
+    textContainer: {
+      flex: 1,
       justifyContent: 'center',
-      alignItems: 'stretch',
+    },
+    sendContainer: {
+      justifyContent: 'flex-end',
+      paddingRight: 10,
+    },
+    sendLabel: {
+      color: '#ffffff',
+      fontSize: 15,
+    },
+    input: {
+      width: windowSize.width - 70,
+      color: '#555555',
+      paddingRight: 10,
+      paddingLeft: 10,
+      paddingTop: 5,
+      height: 32,
+      borderColor: '#6E5BAA',
+      borderWidth: 1,
+      borderRadius: 2,
+      alignSelf: 'center',
+      backgroundColor: '#ffffff',
     },
   };
 
   constructor(props) {
     super(props);
+    console.log(props);
 
     this.state = {
-      username: '',
-      submitInProgress: false,
+      message: '',
+      messageList: [],
     };
+  }
+
+  onBackPress = () => {
+    this.props.leaveChat();
+    this.props.navigator.pop();
   }
 
   render () {
     return (
-      <View style={Login.styles.container}>
-        <Text style={{ color: '#fff' }}>Chat</Text>
+      <View style={Chat.styles.container}>
+        <View style={Chat.styles.topContainer}>
+          <TouchableHighlight
+            underlayColor={'#4e4273'}
+            onPress={this.onBackPress}
+            style={{ marginLeft: 15 }}
+          >
+            <Text style={{ color: '#fff' }}>&lt; Back</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={Chat.styles.chatContainer}>
+          <Text style={{ color: '#000' }}>Chat</Text>
+        </View>
+        <View style={Chat.styles.inputContainer}>
+          <View style={Chat.styles.textContainer}>
+            <TextInput
+              style={Chat.styles.input}
+              value={this.state.message}
+              onChangeText={(text) => this.setState({ message: text })}
+            />
+          </View>
+          <View style={Chat.styles.sendContainer}>
+            <TouchableHighlight
+              underlayColor={'#4e4273'}
+              onPress={() => this.onSendPress()}
+            >
+              <Text style={Chat.styles.sendLabel}>SEND</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
       </View>
     );
   }
@@ -61,16 +121,14 @@ class Login extends Component {
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ login }, dispatch);
+  return bindActionCreators({ leaveChat }, dispatch);
 }
 
 function mapStateToProps(state = {}) {
-  const loginState = state.login;
+  const chatState = state.chat;
   return {
-    success: loginState.success,
-    error: loginState.error,
-    username: loginState.user_name,
+    leaveSuccess: chatState.leaveSuccess,
   };
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);

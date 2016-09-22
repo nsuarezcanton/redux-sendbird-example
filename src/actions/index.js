@@ -67,17 +67,16 @@ export function joinChannel (url) {
       url,
       {
         successFunc: (data) => {
-          // console.log(data);
           resolve({
             joinChannelSuccessful: true,
             joinChannelResponse: data,
           });
           sendbird.connect({
             successFunc: (test) => {
-              // console.log(test);
+              console.log(test);
             },
             errorFunc: (status, error) => {
-              // console.log(status, error);
+              console.log(status, error);
             },
           });
         },
@@ -95,5 +94,22 @@ export function joinChannel (url) {
   return {
     type: JOIN_CHANNEL,
     payload: joinChannelRequest,
+  };
+}
+
+export const RECIVE_MESSAGE = 'RECIVE_MESSAGE';
+export function reciveMessage () {
+  sendbird.events.onMessageReceived = (obj) => {
+    // console.log(obj);
+    // this.setState({messageList: this.state.messageList.concat([obj])});
+  };
+}
+
+export const LEAVE_CHAT = 'LEAVE_CHAT';
+export function leaveChat () {
+  sendbird.disconnect();
+  return {
+    type: LEAVE_CHAT,
+    payload: true,
   };
 }

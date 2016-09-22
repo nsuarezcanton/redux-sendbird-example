@@ -96,7 +96,6 @@ class Channels extends Component {
     const { joinChannelSuccessful } = nextProps;
     if (joinChannelSuccessful) {
       this.props.navigator.push({ name: 'chat' });
-      // console.log('here');
     }
   };
 
@@ -142,17 +141,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state, ownProps = {}) {
-  // const channelListState = state.channels;
-
-  // console.log(channelListState);
-
-  // if (channelListState.response) {
-  //   return {
-  //     success: channelListState.success,
-  //     error: channelListState.error,
-  //     response: channelListState.response,
-  //   };
-  // }
   return Object.assign({}, ownProps, state.channels);
 }
 
