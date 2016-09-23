@@ -107,7 +107,7 @@ export function leaveChat () {
 }
 
 export const GET_MESSAGES = 'GET_MESSAGES';
-export function getMessages (previousMessageList = []) {
+export function getMessages () {
   const getMessagesRequest = new Promise((resolve, reject) => {
     sendbird.getMessageLoadMore({
       limit: 100,
@@ -121,7 +121,6 @@ export function getMessages (previousMessageList = []) {
         resolve({
           getMessagesSuccessful: true,
           getMessagesResponse: messageList,
-          previousMessageList,
         });
       },
       errorFunc: (status, error) => {
@@ -144,5 +143,19 @@ export function sendMessage (text) {
   return {
     type: SEND_MESSAGE,
     payload: true,
+  };
+}
+
+// Event listener for message reception.
+sendbird.events.onMessageReceived = (obj) => {
+  recieveMessage(obj);
+};
+
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+export function recieveMessage (message) {
+  console.log(message);
+  return {
+    type: RECEIVE_MESSAGE,
+    payload: message,
   };
 }

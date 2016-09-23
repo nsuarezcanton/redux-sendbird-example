@@ -76,26 +76,17 @@ class Chat extends Component {
 
     this.state = {
       message: '',
-      messagesOnDisplay: [],
     };
   }
 
   componentWillMount = () => {
-    this.props.getMessages(this.state.messagesOnDisplay);
+    this.props.getMessages();
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    const { messageList } = nextProps;
-    this.setState({
-      messagesOnDisplay: messageList,
-    });
+  onSendPress = () => {
+    const { message } = this.state;
+    this.props.sendMessage(message);
   };
-
-  // shouldComponentUpdate = (nextProps, nextState) => {
-  //   console.log(nextProps);
-  //   console.log(nextState);
-  //   return true;
-  // }
 
   onBackPress = () => {
     this.props.leaveChat();
@@ -143,8 +134,8 @@ class Chat extends Component {
             scrollEventThrottle={16}
             onContentSizeChange={(e) => {}}
           >
-        {this.renderMessages()}
-        </ScrollView>
+            {this.renderMessages()}
+          </ScrollView>
         </View>
         <View style={Chat.styles.inputContainer}>
           <View style={Chat.styles.textContainer}>
@@ -157,7 +148,7 @@ class Chat extends Component {
           <View style={Chat.styles.sendContainer}>
             <TouchableHighlight
               underlayColor={'#4e4273'}
-              onPress={() => this.props.sendMessage(this.state.message)}
+              onPress={this.onSendPress}
             >
               <Text style={Chat.styles.sendLabel}>SEND</Text>
             </TouchableHighlight>
@@ -175,7 +166,6 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state = {}) {
   const chatState = state.chat;
-  console.log(chatState);
   return {
     messageList: chatState.messageList,
     messageSent: chatState.messageSent,
