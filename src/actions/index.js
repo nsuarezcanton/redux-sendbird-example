@@ -146,14 +146,8 @@ export function sendMessage (text) {
   };
 }
 
-// Event listener for message reception.
-sendbird.events.onMessageReceived = (obj) => {
-  recieveMessage(obj);
-};
-
 export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
-export function recieveMessage (message) {
-  console.log(message);
+export function receiveMessage (message) {
   return {
     type: RECEIVE_MESSAGE,
     payload: message,

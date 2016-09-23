@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { View, Text, TouchableHighlight, TextInput, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import sendbird from 'sendbird';
 
-import { getMessages, leaveChat, sendMessage } from '../actions/index';
+import { getMessages, leaveChat, sendMessage, receiveMessage } from '../actions/index';
 
 const windowSize = Dimensions.get('window');
 
@@ -15,6 +16,7 @@ class Chat extends Component {
     messageList: PropTypes.array,
     sendMessage: PropTypes.func,
     messageSent: PropTypes.bool,
+    receiveMessage: PropTypes.func,
   };
 
   static styles = {
@@ -86,6 +88,10 @@ class Chat extends Component {
   onSendPress = () => {
     const { message } = this.state;
     this.props.sendMessage(message);
+    // Event listener for message reception.
+    sendbird.events.onMessageReceived = (obj) => {
+      this.props.receiveMessage(obj);
+    };
   };
 
   onBackPress = () => {
@@ -161,7 +167,7 @@ class Chat extends Component {
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ leaveChat, getMessages, sendMessage }, dispatch);
+  return bindActionCreators({ leaveChat, getMessages, sendMessage, receiveMessage }, dispatch);
 }
 
 function mapStateToProps(state = {}) {

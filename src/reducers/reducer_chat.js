@@ -8,9 +8,11 @@ export default function (state = {}, action) {
       return Object.assign({}, state, { messageList: action.payload.getMessagesResponse });
     case SEND_MESSAGE:
       return Object.assign({}, state, { messageSent: action.payload });
-    case RECEIVE_MESSAGE:
-      console.log(state);
-      return Object.assign({}, state, { messageSent: action.payload });
+    case RECEIVE_MESSAGE: {
+      const { messageList } = state;
+      const updatedMessageList = messageList.concat(action.payload);
+      return Object.assign({}, state, { messageList: updatedMessageList });
+    }
     default:
       return state;
   }
