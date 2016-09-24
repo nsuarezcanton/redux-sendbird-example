@@ -82,7 +82,6 @@ class Login extends Component {
   onPress = () => {
     const { username } = this.state;
     if (username !== '') {
-      console.log('here');
       this.props.login(username);
       this.setState({ submitInProgress: true });
     }

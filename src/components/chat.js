@@ -11,6 +11,7 @@ const windowSize = Dimensions.get('window');
 class Chat extends Component {
   static propTypes = {
     navigator: PropTypes.object,
+    route: PropTypes.object,
     leaveChat: PropTypes.func,
     getMessages: PropTypes.func,
     messageList: PropTypes.array,
@@ -29,22 +30,34 @@ class Chat extends Component {
     topContainer: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA',
+      backgroundColor: '#5DA9E9',
       paddingTop: 20,
+    },
+    channelLabel: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#ffffff',
+      marginRight: 20,
     },
     chatContainer: {
       flex: 11,
       justifyContent: 'center',
       alignItems: 'stretch',
     },
+    nameLabel: {
+      fontWeight: 'bold',
+    },
+    messageLabel: {
+      fontWeight: 'normal',
+    },
     inputContainer: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA',
+      backgroundColor: '#5DA9E9',
     },
     textContainer: {
       flex: 1,
@@ -65,7 +78,7 @@ class Chat extends Component {
       paddingLeft: 10,
       paddingTop: 5,
       height: 32,
-      borderColor: '#6E5BAA',
+      borderColor: '#003F91',
       borderWidth: 1,
       borderRadius: 2,
       alignSelf: 'center',
@@ -75,7 +88,6 @@ class Chat extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       message: '',
     };
@@ -113,9 +125,9 @@ class Chat extends Component {
             style={Chat.styles.messageContainer}
             key={index}
           >
-            <Text style={this.nameLabel}>
-              {item.user.name}
-              <Text style={Chat.styles.messageLabel}> : {item.message}</Text>
+            <Text style={Chat.styles.nameLabel}>
+              {item.user.name}:
+              <Text style={Chat.styles.messageLabel}> {item.message}</Text>
             </Text>
           </View>
         );
@@ -130,12 +142,13 @@ class Chat extends Component {
       <View style={Chat.styles.container}>
         <View style={Chat.styles.topContainer}>
           <TouchableHighlight
-            underlayColor={'#4e4273'}
+            underlayColor={'#006AF5'}
             onPress={this.onBackPress}
             style={{ marginLeft: 15 }}
           >
             <Text style={{ color: '#fff' }}>&lt; Back</Text>
           </TouchableHighlight>
+          <Text style={Chat.styles.channelLabel}>#{this.props.route.channelName}</Text>
         </View>
         <View style={Chat.styles.chatContainer}>
           <ScrollView
@@ -157,7 +170,7 @@ class Chat extends Component {
           </View>
           <View style={Chat.styles.sendContainer}>
             <TouchableHighlight
-              underlayColor={'#4e4273'}
+              underlayColor={'#006AF5'}
               onPress={this.onSendPress}
             >
               <Text style={Chat.styles.sendLabel}>SEND</Text>

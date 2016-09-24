@@ -105,19 +105,23 @@ class Channels extends Component {
   };
 
   componentDidUpdate = (nextProps) => {
+    const { channelName } = this.state;
     const { joinChannelSuccessful } = nextProps;
     if (joinChannelSuccessful) {
-      this.props.navigator.push({ name: 'chat' });
+      this.props.navigator.push({ name: 'chat', channelName });
     }
   };
 
-  onChannelPress = (url) => {
+  onChannelPress = (url, channelName) => {
+    this.setState({
+      channelName,
+    });
     this.props.joinChannel(url);
   };
 
   renderRow = (rowData) => {
     return (
-      <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>
+      <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url, rowData.name)}>
         <View style={Channels.styles.listItem}>
           <View style={Channels.styles.listIcon}>
             <Image style={Channels.styles.channelIcon} source={{ uri: rowData.cover_img_url }} />
