@@ -20,11 +20,23 @@ class Channels extends Component {
       alignItems: 'stretch',
       backgroundColor: '#ffffff',
     },
+    topContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#5DA9E9',
+      paddingTop: 20,
+    },
+    channelTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#ffffff',
+    },
     listContainer: {
       flex: 11,
       justifyContent: 'center',
       alignItems: 'stretch',
-      marginTop: 10,
     },
     listItem: {
       flex: 1,
@@ -122,6 +134,11 @@ class Channels extends Component {
   render () {
     return (
       <View style={Channels.styles.container}>
+        <View style={Channels.styles.topContainer}>
+          <Text style={Channels.styles.channelTitle}>
+            Channels
+          </Text>
+        </View>
         <View style={Channels.styles.listContainer}>
           <ListView
             enableEmptySections
