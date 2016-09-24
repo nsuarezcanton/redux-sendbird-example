@@ -19,7 +19,14 @@ class Login extends Component {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'stretch',
-      backgroundColor: '#CEF7A0',
+      backgroundColor: '#5DA9E9',
+    },
+    usernameMessage: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#ffffff',
+      marginBottom: 10,
+      textAlign: 'left',
     },
     loginContainer: {
       flex: 1,
@@ -31,7 +38,7 @@ class Login extends Component {
       color: '#555555',
       padding: 10,
       height: 50,
-      borderColor: '#32C5E6',
+      borderColor: '#336699',
       borderWidth: 1,
       borderRadius: 4,
       alignSelf: 'center',
@@ -43,7 +50,7 @@ class Login extends Component {
       borderRadius: 5,
       padding: 10,
       marginTop: 10,
-      backgroundColor: 'rgba(5, 74, 145, 1)',
+      backgroundColor: '#003F91',
     },
     label: {
       width: 230,
@@ -74,8 +81,11 @@ class Login extends Component {
 
   onPress = () => {
     const { username } = this.state;
-    this.props.login(username);
-    this.setState({ submitInProgress: true });
+    if (username !== '') {
+      console.log('here');
+      this.props.login(username);
+      this.setState({ submitInProgress: true });
+    }
   };
 
   onChangeText = (formInput) => {
@@ -86,17 +96,20 @@ class Login extends Component {
     return (
       <View style={Login.styles.container}>
         <View style={Login.styles.loginContainer}>
+          <Text style={Login.styles.usernameMessage}>
+            Please, enter your username.
+          </Text>
           <TextInput
             style={Login.styles.input}
             value={this.state.username}
             onChangeText={this.onChangeText}
-            placeholder={'Enter User Nickname'}
+            placeholder={'Username'}
             maxLength={12}
             multiline={false}
           />
           <TouchableHighlight
             style={Login.styles.button}
-            underlayColor={'#D4F2DB'}
+            underlayColor={'#006AF5'}
             onPress={this.onPress}
           >
             <Text style={Login.styles.label}>LOGIN</Text>
