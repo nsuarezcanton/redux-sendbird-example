@@ -2,7 +2,7 @@ import sendbird from 'sendbird';
 
 // SendBird App ID
 // TODO: Add as .env variable
-const APP_ID = '92810347-7548-4EAD-AC80-6107B5DAE06D';
+const APP_ID = 'A7A2672C-AD11-11E4-8DAA-0A18B21C2D82';
 
 export const LOGIN = 'LOGIN';
 export function login (username) {

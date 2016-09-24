@@ -92,10 +92,14 @@ class Chat extends Component {
     sendbird.events.onMessageReceived = (obj) => {
       this.props.receiveMessage(obj);
     };
+
+    this.setState({
+      message: '',
+    });
   };
 
   onBackPress = () => {
-    this.props.leaveChat();
+    sendbird.disconnect();
     this.props.navigator.pop();
   };
 
