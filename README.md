@@ -1,6 +1,10 @@
 # redux-sendbird-example
 A small chatting application implemented using React Native and Redux. It uses the SendBird API to handle messaging. Still needs a fair amount of (work) debugging and styling improvement, but some of the basic functionality is covered.
 
+![](/screenshots/login.png)
+![](/screenshots/channels.png)
+![](/screenshots/chat.png)
+
 ## Running the application locally:
 In order to run this application is necessary to have React Native installed. Follow the [instructions](https://facebook.github.io/react-native/docs/getting-started.html#content) for installing it before trying to run this app.
 
